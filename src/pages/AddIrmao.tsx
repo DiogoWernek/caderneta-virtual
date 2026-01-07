@@ -50,7 +50,7 @@ export default function AddIrmao({ userId }: { userId: string }) {
         uf: data.uf ?? f.uf
       }))
     } catch (err) {
-      setError(err.message ?? 'Erro ao buscar CEP')
+      setError(err instanceof Error ? err.message : 'Erro ao buscar CEP')
     }
   }
 

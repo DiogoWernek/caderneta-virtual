@@ -24,7 +24,7 @@ function App() {
         path="/"
         element={
           session ? (
-            <Main onSignOut={() => supabase!.auth.signOut()} userId={session.user.id} />
+            <Main onSignOut={() => supabase!.auth.signOut()} />
           ) : (
             <Navigate to="/login" replace />
           )
@@ -69,7 +69,7 @@ type PersonRow = {
   filhas_qtd: number | null
 }
 
-function Main({ onSignOut, userId }: { onSignOut: () => Promise<{ error: any } | { data: any }>, userId: string }) {
+function Main({ onSignOut }: { onSignOut: () => Promise<{ error: any } | { data: any }> }) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
