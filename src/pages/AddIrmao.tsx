@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Flex, Heading, RadioGroup, Separator, Text, TextField, Callout } from '@radix-ui/themes'
+import { Button, Card, Flex, Heading, RadioGroup, Separator, TextField, Callout } from '@radix-ui/themes'
 import { supabase } from '../lib/supabase'
 import { useNavigate } from 'react-router-dom'
 

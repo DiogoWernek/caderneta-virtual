@@ -3,7 +3,7 @@ import { supabase, hasSupabaseConfig } from './lib/supabase'
 import type { Session } from '@supabase/supabase-js'
 import AddIrmao from './pages/AddIrmao'
 import PersonDetail from './pages/PersonDetail'
-import { Box, Button, Callout, Card, Flex, Heading, Separator, Text, TextField, Link, Dialog, RadioGroup, Table } from '@radix-ui/themes'
+import { Button, Callout, Card, Flex, Heading, Separator, Text, TextField, Table } from '@radix-ui/themes'
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import './App.css'
 

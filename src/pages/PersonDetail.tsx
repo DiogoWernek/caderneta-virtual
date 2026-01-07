@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Button, Card, Flex, Heading, Separator, Text, TextField, Callout, RadioGroup } from '@radix-ui/themes'
+import { Button, Card, Flex, Heading, Separator, TextField, Callout, RadioGroup } from '@radix-ui/themes'
 
 type PersonRow = {
   id: string
