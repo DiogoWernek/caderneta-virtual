@@ -71,7 +71,6 @@ type PersonRow = {
 
 function Main({ onSignOut, userId }: { onSignOut: () => Promise<{ error: any } | { data: any }>, userId: string }) {
   const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [query, setQuery] = useState('')
@@ -111,83 +110,7 @@ function Main({ onSignOut, userId }: { onSignOut: () => Promise<{ error: any } |
     setPage(1)
   }, [query])
 
-  const [form, setForm] = useState({
-    nome: '',
-    idade: '',
-    tempo_crente_anos: '',
-    numero_prontuario: '',
-    estado_civil: 'solteiro',
-    conjugue_nome: '',
-    conjugue_idade: '',
-    conjugue_tempo_crente_anos: '',
-    congregacao_comum: '',
-    cep: '',
-    endereco: '',
-    filhos_idades: '',
-    filhas_idades: ''
-  })
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!supabase) return
-    setLoading(true)
-    setError(null)
-    try {
-      const parseNums = (s: string) =>
-        s
-          .split(',')
-          .map((x) => x.trim())
-          .filter((x) => x.length > 0)
-          .map((x) => Number(x))
-          .filter((n) => Number.isFinite(n) && n >= 0)
-
-      const filhosArr = parseNums(form.filhos_idades)
-      const filhasArr = parseNums(form.filhas_idades)
-
-      const payload = {
-        created_by: userId,
-        nome: form.nome || null,
-        idade: form.idade ? Number(form.idade) : null,
-        tempo_crente_anos: form.tempo_crente_anos ? Number(form.tempo_crente_anos) : null,
-        numero_prontuario: form.numero_prontuario || null,
-        estado_civil: form.estado_civil as PersonRow['estado_civil'],
-        conjugue_nome: form.conjugue_nome || null,
-        conjugue_idade: form.conjugue_idade ? Number(form.conjugue_idade) : null,
-        conjugue_tempo_crente_anos: form.conjugue_tempo_crente_anos ? Number(form.conjugue_tempo_crente_anos) : null,
-        congregacao_comum: form.congregacao_comum || null,
-        cep: form.cep || null,
-        endereco: form.endereco || null,
-        filhos_idades: filhosArr.length ? filhosArr : null,
-        filhas_idades: filhasArr.length ? filhasArr : null,
-        filhos_qtd: filhosArr.length || 0,
-        filhas_qtd: filhasArr.length || 0
-      }
-
-      const { error } = await supabase.from('persons').insert([payload])
-      if (error) throw error
-      setOpen(false)
-      setForm({
-        nome: '',
-        idade: '',
-        tempo_crente_anos: '',
-        numero_prontuario: '',
-        estado_civil: 'solteiro',
-        conjugue_nome: '',
-        conjugue_idade: '',
-        conjugue_tempo_crente_anos: '',
-        congregacao_comum: '',
-        cep: '',
-        endereco: '',
-        filhos_idades: '',
-        filhas_idades: ''
-      })
-      fetchRows(query)
-    } catch (err: any) {
-      setError(err.message ?? 'Erro ao salvar')
-    } finally {
-      setLoading(false)
-    }
-  }
+  // formulário de criação foi movido para página dedicada
 
   return (
     <Flex direction="column" align="center" style={{ minHeight: '100vh', width: '100%' }} gap="4" className="main-wrapper">

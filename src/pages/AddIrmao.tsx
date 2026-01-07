@@ -49,7 +49,9 @@ export default function AddIrmao({ userId }: { userId: string }) {
         cidade: data.localidade ?? f.cidade,
         uf: data.uf ?? f.uf
       }))
-    } catch {}
+    } catch (err) {
+      setError(err.message ?? 'Erro ao buscar CEP')
+    }
   }
 
   const submit = async (e: React.FormEvent) => {
