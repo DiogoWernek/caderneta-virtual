@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Button, Card, Flex, Heading, Separator, TextField, Callout, RadioGroup } from '@radix-ui/themes'
+import { Button, Card, Flex, Heading, Separator, Text as RtText, TextField, Callout, RadioGroup } from '@radix-ui/themes'
 
 type PersonRow = {
   id: string
@@ -147,59 +147,76 @@ export default function PersonDetail() {
         </Callout.Root>
       )}
       <Card className="auth-card" style={{ width: '100%' }}>
-        <Flex direction="column" gap="4">
-          <TextField.Root placeholder="Nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: (e.target as HTMLInputElement).value })} disabled={!editing} />
-          <Flex gap="3">
-            <TextField.Root placeholder="Idade" type="number" value={form.idade} onChange={(e) => setForm({ ...form, idade: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="Tempo de crente (anos)" type="number" value={form.tempo_crente_anos} onChange={(e) => setForm({ ...form, tempo_crente_anos: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="Nº prontuário" value={form.numero_prontuario} onChange={(e) => setForm({ ...form, numero_prontuario: (e.target as HTMLInputElement).value })} disabled={!editing} />
-          </Flex>
-          <RadioGroup.Root value={form.estado_civil} onValueChange={(v) => setForm({ ...form, estado_civil: v })}>
-            <Flex gap="3">
-              <RadioGroup.Item value="solteiro" disabled={!editing}>Solteiro(a)</RadioGroup.Item>
-              <RadioGroup.Item value="casado" disabled={!editing}>Casado(a)</RadioGroup.Item>
-              <RadioGroup.Item value="viuvo" disabled={!editing}>Viúvo(a)</RadioGroup.Item>
-              <RadioGroup.Item value="separado" disabled={!editing}>Separado(a)</RadioGroup.Item>
+        {!editing ? (
+          <Flex direction="column" gap="3">
+            <RtText>Nome: {form.nome || '-'}</RtText>
+            <RtText>Idade: {form.idade || '-'}</RtText>
+            <RtText>Tempo de crente (anos): {form.tempo_crente_anos || '-'}</RtText>
+            <RtText>Nº prontuário: {form.numero_prontuario || '-'}</RtText>
+            <RtText>Estado civil: {form.estado_civil || '-'}</RtText>
+            <Separator size="4" />
+            <RtText>Nome do cônjuge: {form.conjugue_nome || '-'}</RtText>
+            <RtText>Idade cônjuge: {form.conjugue_idade || '-'}</RtText>
+            <RtText>Tempo de crente cônjuge (anos): {form.conjugue_tempo_crente_anos || '-'}</RtText>
+            <Separator size="4" />
+            <RtText>Comum congregação: {form.congregacao_comum || '-'}</RtText>
+            <RtText>CEP: {form.cep || '-'}</RtText>
+            <RtText>Endereço: {form.endereco || '-'}</RtText>
+            <RtText>Número: {form.numero_residencia || '-'}</RtText>
+            <Separator size="4" />
+            <RtText>Idades dos filhos: {form.filhos_idades || '-'}</RtText>
+            <RtText>Idades das filhas: {form.filhas_idades || '-'}</RtText>
+            <Flex gap="3" justify="end" mt="3">
+              <Button variant="soft" onClick={() => navigate('/')}>Voltar</Button>
+              <Button variant="solid" color="gray" highContrast style={{ backgroundColor: 'var(--gray-9)', color: '#fff' }} onClick={() => setEditing(true)}>
+                Editar
+              </Button>
+              <Button variant="solid" color="gray" highContrast style={{ backgroundColor: 'var(--gray-9)', color: '#fff' }} onClick={remove} disabled={loading}>
+                Excluir
+              </Button>
             </Flex>
-          </RadioGroup.Root>
-          <Flex gap="3">
-            <TextField.Root placeholder="Nome do cônjuge" value={form.conjugue_nome} onChange={(e) => setForm({ ...form, conjugue_nome: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="Idade cônjuge" type="number" value={form.conjugue_idade} onChange={(e) => setForm({ ...form, conjugue_idade: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="Tempo de crente cônjuge (anos)" type="number" value={form.conjugue_tempo_crente_anos} onChange={(e) => setForm({ ...form, conjugue_tempo_crente_anos: (e.target as HTMLInputElement).value })} disabled={!editing} />
           </Flex>
-          <Flex gap="3">
-            <TextField.Root placeholder="Comum congregação" value={form.congregacao_comum} onChange={(e) => setForm({ ...form, congregacao_comum: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="CEP" value={form.cep} onChange={(e) => setForm({ ...form, cep: (e.target as HTMLInputElement).value })} disabled={!editing} />
+        ) : (
+          <Flex direction="column" gap="4">
+            <TextField.Root placeholder="Nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: (e.target as HTMLInputElement).value })} />
+            <Flex gap="3">
+              <TextField.Root placeholder="Idade" type="number" value={form.idade} onChange={(e) => setForm({ ...form, idade: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="Tempo de crente (anos)" type="number" value={form.tempo_crente_anos} onChange={(e) => setForm({ ...form, tempo_crente_anos: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="Nº prontuário" value={form.numero_prontuario} onChange={(e) => setForm({ ...form, numero_prontuario: (e.target as HTMLInputElement).value })} />
+            </Flex>
+            <RadioGroup.Root value={form.estado_civil} onValueChange={(v) => setForm({ ...form, estado_civil: v })}>
+              <Flex gap="3">
+                <RadioGroup.Item value="solteiro">Solteiro(a)</RadioGroup.Item>
+                <RadioGroup.Item value="casado">Casado(a)</RadioGroup.Item>
+                <RadioGroup.Item value="viuvo">Viúvo(a)</RadioGroup.Item>
+                <RadioGroup.Item value="separado">Separado(a)</RadioGroup.Item>
+              </Flex>
+            </RadioGroup.Root>
+            <Flex gap="3">
+              <TextField.Root placeholder="Nome do cônjuge" value={form.conjugue_nome} onChange={(e) => setForm({ ...form, conjugue_nome: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="Idade cônjuge" type="number" value={form.conjugue_idade} onChange={(e) => setForm({ ...form, conjugue_idade: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="Tempo de crente cônjuge (anos)" type="number" value={form.conjugue_tempo_crente_anos} onChange={(e) => setForm({ ...form, conjugue_tempo_crente_anos: (e.target as HTMLInputElement).value })} />
+            </Flex>
+            <Flex gap="3">
+              <TextField.Root placeholder="Comum congregação" value={form.congregacao_comum} onChange={(e) => setForm({ ...form, congregacao_comum: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="CEP" value={form.cep} onChange={(e) => setForm({ ...form, cep: (e.target as HTMLInputElement).value })} />
+            </Flex>
+            <Flex gap="3">
+              <TextField.Root placeholder="Endereço" value={form.endereco} onChange={(e) => setForm({ ...form, endereco: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="Número" value={form.numero_residencia} onChange={(e) => setForm({ ...form, numero_residencia: (e.target as HTMLInputElement).value })} />
+            </Flex>
+            <Flex gap="3">
+              <TextField.Root placeholder="Idades dos filhos (vírgula)" value={form.filhos_idades} onChange={(e) => setForm({ ...form, filhos_idades: (e.target as HTMLInputElement).value })} />
+              <TextField.Root placeholder="Idades das filhas (vírgula)" value={form.filhas_idades} onChange={(e) => setForm({ ...form, filhas_idades: (e.target as HTMLInputElement).value })} />
+            </Flex>
+            <Flex gap="3" justify="end">
+              <Button variant="soft" onClick={() => setEditing(false)}>Cancelar</Button>
+              <Button variant="solid" color="gray" highContrast style={{ backgroundColor: 'var(--gray-9)', color: '#fff' }} onClick={update} disabled={loading}>
+                Salvar
+              </Button>
+            </Flex>
           </Flex>
-          <Flex gap="3">
-            <TextField.Root placeholder="Endereço" value={form.endereco} onChange={(e) => setForm({ ...form, endereco: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="Número" value={form.numero_residencia} onChange={(e) => setForm({ ...form, numero_residencia: (e.target as HTMLInputElement).value })} disabled={!editing} />
-          </Flex>
-          <Flex gap="3">
-            <TextField.Root placeholder="Idades dos filhos (vírgula)" value={form.filhos_idades} onChange={(e) => setForm({ ...form, filhos_idades: (e.target as HTMLInputElement).value })} disabled={!editing} />
-            <TextField.Root placeholder="Idades das filhas (vírgula)" value={form.filhas_idades} onChange={(e) => setForm({ ...form, filhas_idades: (e.target as HTMLInputElement).value })} disabled={!editing} />
-          </Flex>
-          <Flex gap="3" justify="end">
-            {!editing ? (
-              <>
-                <Button variant="soft" onClick={() => navigate('/')}>Voltar</Button>
-                <Button variant="solid" color="gray" highContrast style={{ backgroundColor: 'var(--gray-9)', color: '#fff' }} onClick={() => setEditing(true)}>
-                  Editar
-                </Button>
-                <Button variant="solid" color="gray" highContrast style={{ backgroundColor: 'var(--gray-9)', color: '#fff' }} onClick={remove} disabled={loading}>
-                  Excluir
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button variant="soft" onClick={() => setEditing(false)}>Cancelar</Button>
-                <Button variant="solid" color="gray" highContrast style={{ backgroundColor: 'var(--gray-9)', color: '#fff' }} onClick={update} disabled={loading}>
-                  Salvar
-                </Button>
-              </>
-            )}
-          </Flex>
-        </Flex>
+        )}
       </Card>
     </Flex>
   )
