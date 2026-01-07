@@ -88,7 +88,8 @@ function Main({ onSignOut }: { onSignOut: () => Promise<{ error: any } | { data:
       const to = from + pageSize - 1
       let req = supabase.from('persons').select('*', { count: 'exact' })
       if (q.trim()) {
-        req = req.ilike('nome', `%${q.trim()}%`)
+        const qt = q.trim()
+        req = req.or(`nome.ilike.%${qt}%,numero_prontuario.ilike.%${qt}%`)
       }
       const { data, count, error } = await req
         .order('created_at', { ascending: false })
@@ -117,7 +118,7 @@ function Main({ onSignOut }: { onSignOut: () => Promise<{ error: any } | { data:
       <Heading size="6">Caderneta Virtual</Heading>
       <Flex gap="3" align="center">
         <TextField.Root
-          placeholder="Buscar por nome"
+          placeholder="Buscar por nome ou Nº prontuário"
           value={query}
           onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
           style={{ minWidth: 360 }}

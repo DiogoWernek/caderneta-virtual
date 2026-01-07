@@ -64,7 +64,19 @@ alter table public.persons
   add column if not exists filhos_idades int[],
   add column if not exists filhas_idades int[],
   add column if not exists filhos_qtd int check (filhos_qtd >= 0),
-  add column if not exists filhas_qtd int check (filhas_qtd >= 0);
+  add column if not exists filhas_qtd int check (filhas_qtd >= 0),
+  add column if not exists data_nascimento date,
+  add column if not exists conjugue_data_nascimento date,
+  add column if not exists valor_aluguel numeric(12,2),
+  add column if not exists salario numeric(12,2),
+  add column if not exists valor_previdencia numeric(12,2),
+  add column if not exists valor_piedade_mensal numeric(12,2),
+  add column if not exists numero_filhos_trabalham int,
+  add column if not exists salario_filhos numeric(12,2),
+  add column if not exists possui_filhos_netos boolean,
+  add column if not exists qtd_filhos_netos_em_casa int;
+  add column if not exists numero_filhos_trabalham int,
+  add column if not exists salario_filhos numeric(12,2);
 
 create index if not exists persons_prontuario_idx on public.persons (numero_prontuario);
 
@@ -95,4 +107,36 @@ $$;
 drop trigger if exists persons_set_updated_at on public.persons;
 create trigger persons_set_updated_at
   before update on public.persons
+  for each row execute procedure public.set_updated_at();
+
+create table if not exists public.purchases (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  created_by uuid references auth.users (id) on delete set null,
+  person_id uuid not null references public.persons (id) on delete cascade,
+  data date not null,
+  descricao text,
+  valor numeric(12,2) not null
+);
+
+alter table public.purchases enable row level security;
+
+create policy "purchases_select_own" on public.purchases
+  for select using (created_by = auth.uid());
+
+create policy "purchases_insert_own" on public.purchases
+  for insert with check (created_by = auth.uid());
+
+create policy "purchases_update_own" on public.purchases
+  for update using (created_by = auth.uid());
+
+create policy "purchases_delete_own" on public.purchases
+  for delete using (created_by = auth.uid());
+
+create index if not exists purchases_person_date_idx on public.purchases (person_id, data desc);
+
+drop trigger if exists purchases_set_updated_at on public.purchases;
+create trigger purchases_set_updated_at
+  before update on public.purchases
   for each row execute procedure public.set_updated_at();
